@@ -1,4 +1,5 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 import './index.css'
 import { Layout, Menu } from 'antd';
 import {
@@ -43,7 +44,8 @@ const menuList = [
   }
 ]
 
-export default function SideMenu() {
+export default function SideMenu(props) {
+  const navigate = useNavigate()
   return (
     <Sider trigger={null} collapsible collapsed={false}>
       <div className="demo-logo-vertical">全球新闻发布管理系统</div>
@@ -52,6 +54,9 @@ export default function SideMenu() {
         mode="inline"
         defaultSelectedKeys={['/home']}
         items={menuList}
+        onClick={({key}) => {
+          navigate(key)
+        }}
       />
     </Sider>
   )
