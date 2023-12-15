@@ -1,0 +1,7 @@
+#root {
+  height: calc(100vh);
+}
+
+#root .ant-layout {
+  height: 100%;
+}
