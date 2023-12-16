@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import './index.css'
 import { Layout, Menu } from 'antd';
 import {
@@ -33,8 +33,10 @@ const iconList = {
   '/publish-manage/sunset': <UserOutlined />
 }
 
-export default function SideMenu(props) {
+export default function SideMenu() {
   const navigate = useNavigate()
+  const location = useLocation()
+  console.log(location, location.pathname.split('/')[1])
   useEffect(() => {
     axios.get('http://localhost:5000/rights?_embed=children').then(res => {
       let menuList = []
@@ -45,7 +47,7 @@ export default function SideMenu(props) {
             label: item.title,
             icon: iconList[item.key]
           }
-          if (item.children && item.children.length > 0) {
+          if (item.children?.length > 0) {
             tmpMenu.children = item.children.filter(child => child.pagepermisson === 1).map(child => ({
               key: child.key,
               label: child.title,
@@ -59,18 +61,31 @@ export default function SideMenu(props) {
     })
   }, [])
   const [menu, setMenu] = useState([])
+  console.log(navigate)
   return (
     <Sider trigger={null} collapsible collapsed={false}>
-      <div className="demo-logo-vertical">全球新闻发布管理系统</div>
-      <Menu
-        theme="dark"
-        mode="inline"
-        defaultSelectedKeys={['/home']}
-        items={menu}
-        onClick={({key}) => {
-          navigate(key)
-        }}
-      />
+      <div style={{
+        display: 'flex',
+        height: '100%',
+        flexDirection: 'column'
+      }}>
+        <div className="demo-logo-vertical">全球新闻发布管理系统</div>
+        <div style={{
+          flex: 1,
+          overflow: 'auto'
+        }}>
+          <Menu
+            theme="dark"
+            mode="inline"
+            selectedKeys={[location.pathname]}
+            defaultOpenKeys={[`/${location.pathname.split('/')[1]}`]}
+            items={menu}
+            onClick={({ key }) => {
+              navigate(key)
+            }}
+          />
+        </div>
+      </div>
     </Sider>
   )
 }
