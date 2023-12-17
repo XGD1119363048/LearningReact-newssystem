@@ -36,7 +36,7 @@ const iconList = {
 export default function SideMenu() {
   const navigate = useNavigate()
   const location = useLocation()
-  console.log(location, location.pathname.split('/')[1])
+  // console.log(location, location.pathname.split('/')[1])
   useEffect(() => {
     axios.get('http://localhost:5000/rights?_embed=children').then(res => {
       let menuList = []
@@ -61,7 +61,6 @@ export default function SideMenu() {
     })
   }, [])
   const [menu, setMenu] = useState([])
-  console.log(navigate)
   return (
     <Sider trigger={null} collapsible collapsed={false}>
       <div style={{
