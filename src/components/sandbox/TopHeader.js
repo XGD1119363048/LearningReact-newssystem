@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -13,6 +14,8 @@ export default function TopHeader() {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
+  const navigate = useNavigate()
 
   const items = [
     {
@@ -48,7 +51,14 @@ export default function TopHeader() {
         float: 'right'
       }}>
         <span>欢迎admin回来</span>
-        <Dropdown menu={{ items }}>
+        <Dropdown menu={{ items, onClick: ({ key }) => {
+          if (key === '2') {
+            localStorage.removeItem('token')
+            navigate('/login', {
+              replace: true
+            })
+          }
+        } }}>
           <Avatar size="large" icon={<UserOutlined />} />
         </Dropdown>
       </div>
