@@ -16,13 +16,13 @@ export default function UserList() {
   const [current, setCurrent] = useState(null)
 
   useEffect(() => {
-    axios.get('http://localhost:5000/regions').then(res => {
+    axios.get('/regions').then(res => {
       setRegionList(res.data)
     })
   }, [])
 
   useEffect(() => {
-    axios.get('http://localhost:5000/roles').then(res => {
+    axios.get('/roles').then(res => {
       setRoleList(res.data)
     })
   }, [])
@@ -35,7 +35,7 @@ export default function UserList() {
       '2': 'admin',
       '3': 'editor'
     }
-    axios.get('http://localhost:5000/users?_expand=role').then(res => {
+    axios.get('/users?_expand=role').then(res => {
       setDataSource(roleObj[roleId] === 'superadmin' ? res.data : [...res.data.filter(item => item.username === username), ...res.data.filter(item => item.region === region && roleObj[item.roleId] === 'editor')])
     })
   }, [region, roleId, username])
@@ -106,7 +106,7 @@ export default function UserList() {
   const handleChange = (item) => {
     item.roleState = !item.roleState
     setDataSource([...dataSource])
-    axios.patch(`http://localhost:5000/users/${item.id}`, {
+    axios.patch(`/users/${item.id}`, {
       roleState: item.roleState
     })
   }
@@ -130,7 +130,7 @@ export default function UserList() {
     // console.log(item)
     // 当前页面同步状态 + 后端同步
     setDataSource(dataSource.filter(data => data.id !== item.id))
-    axios.delete(`http://localhost:5000/users/${item.id}`)
+    axios.delete(`/users/${item.id}`)
   }
 
   const addFormOK = () => {
@@ -138,7 +138,7 @@ export default function UserList() {
       // console.log(value)
       setIsAddVisible(false)
       // post 到后端生成id，再设置 dataSource，方便后续删除更新操作
-      axios.post(`http://localhost:5000/users`, {
+      axios.post(`/users`, {
         ...value,
         roleState: true,
         default: false,
@@ -160,7 +160,7 @@ export default function UserList() {
       setIsUpdateVisible(false)
       setIsUpdateDisabled(!isUpdateDisabled)
       
-      axios.patch(`http://localhost:5000/users/${current.id}`, value).then(_ => {
+      axios.patch(`/users/${current.id}`, value).then(_ => {
         setDataSource(dataSource.map(item => {
           if (item.id === current.id) {
             return {

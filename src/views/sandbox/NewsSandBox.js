@@ -1,17 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import SideMenu from '../../components/sandbox/SideMenu'
 import TopHeader from '../../components/sandbox/TopHeader'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
+import NProgress from 'nprogress'
 
 import './NewsSandBox.css'
+import 'nprogress/nprogress.css'
 
 import { Layout, theme } from 'antd'
 const { Content } = Layout;
 
 export default function NewsSandBox() {
+  const location = useLocation()
+  useEffect(() => {
+    NProgress.start()
+    NProgress.done()
+  }, [location])
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
   return (
     <Layout>
       <SideMenu />
