@@ -53,7 +53,7 @@ export default function TopHeader() {
       <div style={{
         float: 'right'
       }}>
-        <span>欢迎{username}回来</span>
+        <span>欢迎<span style={{color: '#1890ff'}}>{username}</span>回来</span>
         <Dropdown menu={{ items, onClick: ({ key }) => {
           if (key === '2') {
             localStorage.removeItem('token')
