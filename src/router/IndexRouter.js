@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
+import axios from 'axios'
+
 import Login from '../views/login/Login'
 import NewsSandBox from '../views/sandbox/NewsSandBox'
 
@@ -18,21 +20,42 @@ import Published from '../views/sandbox/publish-manage/Published'
 import Sunset from '../views/sandbox/publish-manage/Sunset'
 
 const LocalRouterMap = {
-  '/home': Home,
-  '/user-manage/list': UserList,
-  '/right-manage/role/list': RoleList,
-  '/right-manage/right/list': RightList,
-  '/news-manage/add': NewsAdd,
-  '/news-manage/draft': NewsDraft,
-  '/news-manage/category': NewsCategory,
-  '/audit-manage/audit': Audit,
-  '/audit-manage/list': AuditList,
-  '/publish-manage/unpublished': Unpublished,
-  '/publish-manage/published': Published,
-  '/publish-manage/sunset': Sunset,
+  '/home': <Home />,
+  '/user-manage/list': <UserList />,
+  '/right-manage/role/list': <RoleList />,
+  '/right-manage/right/list': <RightList />,
+  '/news-manage/add': <NewsAdd />,
+  '/news-manage/draft': <NewsDraft />,
+  '/news-manage/category': <NewsCategory />,
+  '/audit-manage/audit': <Audit />,
+  '/audit-manage/list': <AuditList />,
+  '/publish-manage/unpublished': <Unpublished />,
+  '/publish-manage/published': <Published />,
+  '/publish-manage/sunset': <Sunset />,
 }
 
 export default function IndexRouter() {
+  const [backRouteList, setBackRouteList] = useState([])
+  useEffect(() => {
+    Promise.all([
+      axios.get('http://localhost:5000/rights'),
+      axios.get('http://localhost:5000/children')
+    ]).then(res => {
+      setBackRouteList([...res[0].data, ...res[1].data])
+      // console.log([...res[0].data, ...res[1].data])
+    })
+  }, [])
+
+  const checkRoute = (item) => {
+    console.log(item)
+    return LocalRouterMap[item.key] && item.pagepermisson === 1
+  }
+
+  const checkUserPermission = (item) => {
+    const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
+    return rights.includes(item.key)
+  }
+  
   return (
     <HashRouter>
       <Routes>
@@ -41,11 +64,17 @@ export default function IndexRouter() {
           <NewsSandBox />
         </AuthComponent>}>
           <Route path='/' element={<Navigate to='home' />} />
-          <Route path='home' element={<Home />} />
-          <Route path='user-manage/list' element={<UserList />} />
-          <Route path='right-manage/role/list' element={<RoleList />} />
-          <Route path='right-manage/right/list' element={<RightList />} />
-          <Route path='*' element={<NoPermission />} />
+          {
+            backRouteList.map(item => {
+              if (checkRoute(item) && checkUserPermission(item)) {
+                return <Route key={item.key} path={item.key.substring(1)} element={LocalRouterMap[item.key]} />
+              }
+              return null
+            })
+          }
+          {
+            backRouteList.length > 0 && <Route path='*' element={<NoPermission />} />
+          }
         </Route>
       </Routes>
     </HashRouter>
