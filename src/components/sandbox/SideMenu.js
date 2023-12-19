@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { useLocation, useNavigate } from 'react-router-dom'
 import './index.css'
@@ -40,6 +40,15 @@ export default function SideMenu() {
   const location = useLocation()
   // console.log(location, location.pathname.split('/')[1])
 
+  const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
+
+  const checkPagePermission = useCallback(
+    (item) => {
+      return item.pagepermisson === 1 && rights.includes(item.key)
+    },
+    [rights],
+  )
+
   useEffect(() => {
     axios.get('http://localhost:5000/rights?_embed=children').then(res => {
       let menuList = []
@@ -62,13 +71,9 @@ export default function SideMenu() {
       })
       setMenu(menuList)
     })
-  }, [])
+  }, [checkPagePermission])
 
-  const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
-
-  const checkPagePermission = (item) => {
-    return item.pagepermisson === 1 && rights.includes(item.key)
-  }
+  
   
   return (
     <Sider trigger={null} collapsible collapsed={false}>
