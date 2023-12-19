@@ -40,13 +40,12 @@ export default function SideMenu() {
   const location = useLocation()
   // console.log(location, location.pathname.split('/')[1])
 
-  const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
-
   const checkPagePermission = useCallback(
     (item) => {
+      const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
       return item.pagepermisson === 1 && rights.includes(item.key)
     },
-    [rights],
+    [],
   )
 
   useEffect(() => {
