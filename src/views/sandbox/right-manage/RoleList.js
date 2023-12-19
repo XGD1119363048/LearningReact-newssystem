@@ -78,13 +78,13 @@ export default function RoleList() {
       if(item.id === currentId) {
         return {
           ...item,
-          rights: currentRights
+          rights: currentRights.checked ? currentRights.checked : currentRights
         }
       }
       return item
     }))
     axios.patch(`http://localhost:5000/roles/${currentId}`, {
-      rights: currentRights
+      rights: currentRights.checked ? currentRights.checked : currentRights
     })
   };
   const handleCancel = () => {

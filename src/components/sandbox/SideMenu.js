@@ -34,14 +34,17 @@ const iconList = {
 }
 
 export default function SideMenu() {
+  const [menu, setMenu] = useState([])
+
   const navigate = useNavigate()
   const location = useLocation()
   // console.log(location, location.pathname.split('/')[1])
+
   useEffect(() => {
     axios.get('http://localhost:5000/rights?_embed=children').then(res => {
       let menuList = []
       res.data.forEach(item => {
-        if (item.pagepermisson === 1) {
+        if (checkPagePermission(item)) {
           let tmpMenu = {
             key: item.key,
             label: item.title,
@@ -60,7 +63,14 @@ export default function SideMenu() {
       setMenu(menuList)
     })
   }, [])
-  const [menu, setMenu] = useState([])
+
+  const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
+
+  const checkPagePermission = (item) => {
+    console.log(rights)
+    return item.pagepermisson === 1 && rights.includes(item.key)
+  }
+  
   return (
     <Sider trigger={null} collapsible collapsed={false}>
       <div style={{

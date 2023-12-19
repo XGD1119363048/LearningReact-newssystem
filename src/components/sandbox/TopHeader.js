@@ -11,16 +11,19 @@ const { Header } = Layout;
 
 export default function TopHeader() {
   const [collapsed, setCollapsed] = useState(false)
+
+  const navigate = useNavigate()
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const navigate = useNavigate()
+  const {role: {roleName}, username} = JSON.parse(localStorage.getItem('token'))
 
   const items = [
     {
       key: '1',
-      label: '超级管理员',
+      label: roleName,
     },
     {
       key: '2',
@@ -50,7 +53,7 @@ export default function TopHeader() {
       <div style={{
         float: 'right'
       }}>
-        <span>欢迎admin回来</span>
+        <span>欢迎{username}回来</span>
         <Dropdown menu={{ items, onClick: ({ key }) => {
           if (key === '2') {
             localStorage.removeItem('token')
