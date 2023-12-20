@@ -112,7 +112,7 @@ export default function NewsAdd() {
             </Form.Item>
             <Form.Item
               label="新闻分类"
-              name="category"
+              name="categoryId"
               rules={[
                 {
                   required: true,
