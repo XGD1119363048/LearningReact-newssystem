@@ -51,8 +51,8 @@ export default function IndexRouter() {
   }
 
   const checkUserPermission = (item) => {
-    const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
-    return rights.includes(item.key)
+    const {role: {rights}} = JSON.parse(localStorage.getItem('token')) || {role: {}}
+    return rights?.includes(item.key)
   }
   
   return (
