@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { PageHeader } from '@ant-design/pro-layout'
 import { Button, Form, Input, Select, Steps } from 'antd'
 import axios from 'axios'
+import NewsEditor from '../../../components/news-manage/NewsEditor'
 
 import style from './News.module.css'
 
@@ -86,7 +87,9 @@ export default function NewsAdd() {
             </Form.Item>
           </Form>
         </div>
-        <div className={current === 1 ? '' : style.hidden}>222</div>
+        <div className={current === 1 ? '' : style.hidden}>
+          <NewsEditor />
+        </div>
         <div className={current === 2 ? '' : style.hidden}>333</div>
       </div>
 
