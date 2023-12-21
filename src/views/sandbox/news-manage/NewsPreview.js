@@ -18,6 +18,7 @@ export default function NewsPreview() {
 
   const auditList = ['未审核', '审核中', '已通过', '未通过']
   const publishList = ['未发布', '待发布', '已上线', '已下线']
+  const colorList = ['black', 'orange', 'green', 'red']
   const items = newsInfo && [
     {
       key: '1',
@@ -44,7 +45,7 @@ export default function NewsPreview() {
       label: '审核状态',
       children: auditList[newsInfo.auditState],
       contentStyle: {
-        color: 'red'
+        color: colorList[newsInfo.auditState]
       }
     },
     {
@@ -52,7 +53,7 @@ export default function NewsPreview() {
       label: '发布状态',
       children: publishList[newsInfo.publishState],
       contentStyle: {
-        color: 'red'
+        color: colorList[newsInfo.auditState]
       }
     },
     {
