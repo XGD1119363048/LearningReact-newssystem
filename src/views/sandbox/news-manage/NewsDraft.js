@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from 'antd';
+import { Button, Modal, notification, Table } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, UploadOutlined } from '@ant-design/icons'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
@@ -48,7 +48,7 @@ export default function NewsDraft() {
           
           <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => confirmMethod(item)} />
 
-          <Button type='primary' shape="circle" icon={<UploadOutlined />} />
+          <Button type='primary' shape="circle" icon={<UploadOutlined />} onClick={() => handleCheck(item.id)} />
         </div>
       }
     }
@@ -74,6 +74,20 @@ export default function NewsDraft() {
     // 当前页面同步状态 + 后端同步
     setDataSource(dataSource.filter(data => data.id !== item.id))
     axios.delete(`/news/${item.id}`)
+  }
+
+  const handleCheck = (id) => {
+    axios.patch(`/news/${id}`, {
+      auditState: 1
+    }).then(res => {
+      navigate('/audit-manage/list')
+      notification.open({
+        message: '通知',
+        description:
+          `您可以到审核列表中查看您的新闻`,
+        placement: 'bottomRight'
+      });
+    })
   }
 
   return (
