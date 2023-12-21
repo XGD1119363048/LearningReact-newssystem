@@ -16,8 +16,9 @@ export default function NewsPreview() {
     })
   }, [params.id])
 
-
-  const items = [
+  const auditList = ['未审核', '审核中', '已通过', '未通过']
+  const publishList = ['未发布', '待发布', '已上线', '已下线']
+  const items = newsInfo && [
     {
       key: '1',
       label: '创建者',
@@ -41,12 +42,18 @@ export default function NewsPreview() {
     {
       key: '5',
       label: '审核状态',
-      children: newsInfo.auditState,
+      children: auditList[newsInfo.auditState],
+      contentStyle: {
+        color: 'red'
+      }
     },
     {
       key: '6',
       label: '发布状态',
-      children: newsInfo.publishState,
+      children: publishList[newsInfo.publishState],
+      contentStyle: {
+        color: 'red'
+      }
     },
     {
       key: '7',
@@ -61,7 +68,7 @@ export default function NewsPreview() {
     {
       key: '9',
       label: '评论数量',
-      children: 'Lili Qu',
+      children: 0,
     },
   ]
 
@@ -76,6 +83,13 @@ export default function NewsPreview() {
           >
             <Descriptions size="small" column={3} items={items} />
           </PageHeader>
+
+          <div dangerouslySetInnerHTML={{
+            __html: newsInfo.content
+          }} style={{
+            border: '1px solid grey',
+            margin: '0 24px'
+          }} />
         </div>
       }
     </div>
