@@ -2,6 +2,7 @@ import { Button, Modal, Table } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, UploadOutlined } from '@ant-design/icons'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { NavLink } from 'react-router-dom';
 
 const { confirm } = Modal
 
@@ -24,7 +25,7 @@ export default function NewsDraft() {
       title: '新闻标题',
       dataIndex: 'title',
       key: 'title',
-      render: (title) => title
+      render: (title, item) => <NavLink to={`/news-manage/preview/${item.id}`}>{title}</NavLink>
     },
     {
       title: '作者',

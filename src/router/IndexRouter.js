@@ -18,6 +18,7 @@ import AuditList from '../views/sandbox/audit-manage/AuditList'
 import Unpublished from '../views/sandbox/publish-manage/Unpublished'
 import Published from '../views/sandbox/publish-manage/Published'
 import Sunset from '../views/sandbox/publish-manage/Sunset'
+import NewsPreview from '../views/sandbox/news-manage/NewsPreview'
 
 const LocalRouterMap = {
   '/home': <Home />,
@@ -27,6 +28,7 @@ const LocalRouterMap = {
   '/news-manage/add': <NewsAdd />,
   '/news-manage/draft': <NewsDraft />,
   '/news-manage/category': <NewsCategory />,
+  '/news-manage/preview/:id': <NewsPreview />,
   '/audit-manage/audit': <Audit />,
   '/audit-manage/list': <AuditList />,
   '/publish-manage/unpublished': <Unpublished />,
@@ -47,7 +49,7 @@ export default function IndexRouter() {
   }, [])
 
   const checkRoute = (item) => {
-    return LocalRouterMap[item.key] && item.pagepermisson === 1
+    return LocalRouterMap[item.key] && (item.pagepermisson === 1 || item.routepermisson)
   }
 
   const checkUserPermission = (item) => {
