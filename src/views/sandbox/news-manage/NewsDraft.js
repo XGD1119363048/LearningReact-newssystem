@@ -2,7 +2,7 @@ import { Button, Modal, Table } from 'antd';
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, UploadOutlined } from '@ant-design/icons'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const { confirm } = Modal
 
@@ -14,6 +14,8 @@ export default function NewsDraft() {
       setDataSource(res.data)
     })
   }, [])
+
+  const navigate = useNavigate()
 
   const columns = [
     {
@@ -42,7 +44,7 @@ export default function NewsDraft() {
       title: '操作',
       render: (item) => {
         return <div>
-          <Button shape="circle" icon={<EditOutlined />} />
+          <Button shape="circle" icon={<EditOutlined />} onClick={() => navigate(`/news-manage/update/${item.id}`)} />
           
           <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => confirmMethod(item)} />
 
