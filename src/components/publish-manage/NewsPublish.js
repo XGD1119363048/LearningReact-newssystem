@@ -27,7 +27,7 @@ export default function NewsPublish(props) {
       title: '操作',
       render: (item) => {
         return <div>
-          {props.button}
+          {props.button(item.id)}
         </div>
       }
     }
