@@ -1,4 +1,4 @@
-import { Button, Table } from 'antd';
+import { Table } from 'antd';
 import React from 'react'
 import { NavLink } from 'react-router-dom';
 
@@ -27,7 +27,7 @@ export default function NewsPublish(props) {
       title: '操作',
       render: (item) => {
         return <div>
-          <Button>button</Button>
+          {props.button}
         </div>
       }
     }
