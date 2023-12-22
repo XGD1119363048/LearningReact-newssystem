@@ -53,7 +53,7 @@ export default function NewsPreview() {
       label: '发布状态',
       children: publishList[newsInfo.publishState],
       contentStyle: {
-        color: colorList[newsInfo.auditState]
+        color: colorList[newsInfo.publishState]
       }
     },
     {
