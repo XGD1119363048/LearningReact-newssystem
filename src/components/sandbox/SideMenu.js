@@ -49,6 +49,7 @@ export default function SideMenu() {
   )
 
   useEffect(() => {
+    const {role: {rights}} = JSON.parse(localStorage.getItem('token'))
     axios.get('/rights?_embed=children').then(res => {
       let menuList = []
       res.data.forEach(item => {
@@ -59,7 +60,7 @@ export default function SideMenu() {
             icon: iconList[item.key]
           }
           if (item.children?.length > 0) {
-            tmpMenu.children = item.children.filter(child => child.pagepermisson === 1).map(child => ({
+            tmpMenu.children = item.children.filter(child => child.pagepermisson === 1 && rights.includes(child.key)).map(child => ({
               key: child.key,
               label: child.title,
               icon: iconList[child.key]
