@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 
 // antd
-import { Button, Table, Tag } from 'antd'
+import { Button, notification, Table, Tag } from 'antd'
 
 export default function AuditList() {
   const [dataSource, setDataSource] = useState([])
@@ -13,6 +13,8 @@ export default function AuditList() {
       setDataSource(res.data)
     })
   }, [])
+
+  const navigate = useNavigate()
 
   const colorList = ['', 'orange', 'green', 'red']
   const auditList = ['未审核', '审核中', '已通过', '未通过']
@@ -50,19 +52,50 @@ export default function AuditList() {
       render: (item) => {
         return <div>
           {
-            item.auditState === 1 && <Button>撤销</Button>
+            item.auditState === 1 && <Button onClick={() => handleRevert(item)}>撤销</Button>
           }
           {
-            item.auditState === 2 && <Button type='primary'>发布</Button>
+            item.auditState === 2 && <Button type='primary' onClick={() => handlePublish(item)}>发布</Button>
           }
           {
-            item.auditState === 3 && <Button danger>更新</Button>
+            item.auditState === 3 && <Button danger onClick={() => handleUpdate(item)}>更新</Button>
           }
           
         </div>
       }
     }
   ];
+
+  const handleRevert = (item) => {
+    axios.patch(`/news/${item.id}`, {
+      auditState: 0
+    }).then(res => {
+      setDataSource(dataSource.filter(data => data.id !== item.id))
+      notification.info({
+        message: '通知',
+        description: '您可以到草稿箱中查看您的新闻',
+        placement: 'bottomRight'
+      })
+    })
+  }
+
+  const handleUpdate = (item) => {
+    navigate(`/news-manage/update/${item.id}`)
+  }
+
+  const handlePublish = (item) => {
+    axios.patch(`/news/${item.id}`, {
+      publishState: 2,
+    }).then(res => {
+      navigate('/publish-manage/published')
+      notification.open({
+        message: '通知',
+        description:
+          '您可以到【发布管理 / 已发布】中查看您的新闻',
+        placement: 'bottomRight'
+      });
+    })
+  }
   
   return (
     <div>
