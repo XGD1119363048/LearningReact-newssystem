@@ -34,7 +34,7 @@ function TopHeader(props) {
   ];
 
   const changeCollapsed = () => {
-
+    props.changeCollapsed()
   }
 
   return (
@@ -80,4 +80,12 @@ const mapStateToProps = ({CollapsedReducer: {isCollapsed}}) => {
   }
 }
 
-export default connect(mapStateToProps)(TopHeader)
+const mapDispatchToProps = {
+  changeCollapsed() {
+    return {
+      type: 'change_collapsed'
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopHeader)
