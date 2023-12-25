@@ -6,6 +6,7 @@ import { Layout, Menu } from 'antd';
 import {
   UserOutlined
 } from '@ant-design/icons';
+import { connect } from 'react-redux';
 const { Sider } = Layout;
 
 const iconList = {
@@ -33,7 +34,7 @@ const iconList = {
   '/publish-manage/sunset': <UserOutlined />
 }
 
-export default function SideMenu() {
+function SideMenu(props) {
   const [menu, setMenu] = useState([])
 
   const navigate = useNavigate()
@@ -76,7 +77,7 @@ export default function SideMenu() {
   
   
   return (
-    <Sider trigger={null} collapsible collapsed={false}>
+    <Sider trigger={null} collapsible collapsed={props.isCollapsed}>
       <div style={{
         display: 'flex',
         height: '100%',
@@ -102,3 +103,9 @@ export default function SideMenu() {
     </Sider>
   )
 }
+
+const mapStateToProps = ({CollapsedReducer: {isCollapsed}}) => ({
+  isCollapsed
+})
+
+export default connect(mapStateToProps)(SideMenu)
