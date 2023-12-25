@@ -7,10 +7,11 @@ import NProgress from 'nprogress'
 import './NewsSandBox.css'
 import 'nprogress/nprogress.css'
 
-import { Layout, theme } from 'antd'
+import { Layout, Spin, theme } from 'antd'
+import { connect } from 'react-redux'
 const { Content } = Layout;
 
-export default function NewsSandBox() {
+function NewsSandBox(props) {
   const location = useLocation()
   useEffect(() => {
     NProgress.start()
@@ -35,9 +36,17 @@ export default function NewsSandBox() {
             overflow: 'auto'
           }}
         >
-          <Outlet />
+          <Spin size="large" spinning={props.isLoading}>
+            <Outlet />
+          </Spin>
         </Content>
       </Layout>
     </Layout>
   )
 }
+
+const mapStateToProps = ({LoadingReducer: {isLoading}}) => ({
+  isLoading
+})
+
+export default connect(mapStateToProps)(NewsSandBox)
