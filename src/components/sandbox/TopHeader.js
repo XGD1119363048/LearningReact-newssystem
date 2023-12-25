@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MenuFoldOutlined,
@@ -6,11 +6,12 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { Layout, Button, theme, Dropdown, Avatar } from 'antd';
+import { connect } from 'react-redux'
 
 const { Header } = Layout;
 
-export default function TopHeader() {
-  const [collapsed, setCollapsed] = useState(false)
+function TopHeader(props) {
+  // const [collapsed, setCollapsed] = useState(false)
 
   const navigate = useNavigate()
 
@@ -32,6 +33,10 @@ export default function TopHeader() {
     },
   ];
 
+  const changeCollapsed = () => {
+
+  }
+
   return (
     <Header
       style={{
@@ -41,8 +46,8 @@ export default function TopHeader() {
     >
       <Button
         type="text"
-        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        onClick={() => setCollapsed(!collapsed)}
+        icon={props.isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        onClick={() => changeCollapsed()}
         style={{
           fontSize: '16px',
           width: 64,
@@ -68,3 +73,11 @@ export default function TopHeader() {
     </Header>
   )
 }
+
+const mapStateToProps = ({CollapsedReducer: {isCollapsed}}) => {
+  return {
+    isCollapsed
+  }
+}
+
+export default connect(mapStateToProps)(TopHeader)
