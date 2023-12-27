@@ -20,6 +20,8 @@ import Published from '../views/sandbox/publish-manage/Published'
 import Sunset from '../views/sandbox/publish-manage/Sunset'
 import NewsPreview from '../views/sandbox/news-manage/NewsPreview'
 import NewsUpdate from '../views/sandbox/news-manage/NewsUpdate'
+import News from '../views/news/News'
+import Detail from '../views/news/Detail'
 
 const LocalRouterMap = {
   '/home': <Home />,
@@ -79,6 +81,8 @@ export default function IndexRouter() {
             backRouteList.length > 0 && <Route path='*' element={<NoPermission />} />
           }
         </Route>
+        <Route path='/news' element={<News />} />
+        <Route path='/detail/:id' element={<Detail />} />
       </Routes>
     </HashRouter>
   )
