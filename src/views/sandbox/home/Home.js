@@ -4,12 +4,15 @@ import axios from 'axios'
 import { NavLink } from 'react-router-dom'
 import * as echarts from 'echarts'
 import _ from 'lodash'
-import { Avatar, Card, Col, List, Row } from 'antd'
+import { Avatar, Card, Col, Drawer, List, Row } from 'antd'
 const { Meta } = Card;
 
 export default function Home() {
   const [viewList, setViewList] = useState([])
   const [starList, setStarList] = useState([])
+  const [open, setOpen] = useState(false)
+  const [pieChart, setPieChart] = useState(null)
+  const [allList, setAllList] = useState([])
   useEffect(() => {
     axios.get('/news?publishState=2&_expand=category&_sort=view&_order=desc&_limit=6').then(res => {
       setViewList(res.data)
@@ -25,6 +28,7 @@ export default function Home() {
   useEffect(() => {
     axios.get('/news?publishState=2&_expand=category').then(res => {
       renderBarView(_.groupBy(res.data, item => item.category.title))
+      setAllList(res.data)
     })
     return () => {
       window.onresize = null
@@ -32,6 +36,7 @@ export default function Home() {
   }, [])
 
   const barRef = useRef()
+  const pieRef = useRef()
 
   const renderBarView = (obj) => {
     // 基于准备好的dom，初始化echarts实例
@@ -74,6 +79,62 @@ export default function Home() {
     }
   }
 
+  const renderPieView = () => {
+    // 数据处理
+    let currentList = allList.filter(item => item.author === username)
+    let groupObj = _.groupBy(currentList, item => item.category.title)
+
+    let list = []
+    for(let key in groupObj) {
+      list.push({
+        name: key,
+        value: groupObj[key].length
+      })
+    }
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart
+    if (!pieChart) {
+      myChart = echarts.init(pieRef.current)
+      setPieChart(myChart)
+    } else {
+      myChart = pieChart
+    }
+
+    // 指定图表的配置项和数据
+    var option = {
+      title: {
+        text: '当前用户新闻分类图示',
+        // subtext: 'Fake Data',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left'
+      },
+      series: [
+        {
+          name: '发布数量',
+          type: 'pie',
+          radius: '50%',
+          data: list,
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+  }
 
   const { username, region, role: { roleName } } = JSON.parse(localStorage.getItem('token'))
 
@@ -111,7 +172,12 @@ export default function Home() {
               />
             }
             actions={[
-              <SettingOutlined key="setting" />,
+              <SettingOutlined key="setting" onClick={() => {
+                setTimeout(() => {
+                  setOpen(true)
+                  renderPieView()
+                })
+              }} />,
               <EditOutlined key="edit" />,
               <EllipsisOutlined key="ellipsis" />,
             ]}
@@ -132,7 +198,15 @@ export default function Home() {
         width: '100%',
         height: '400px',
         marginTop: '30px'
-      }}></div>
+      }} />
+
+      <Drawer title="个人新闻分类" placement="right" width='500px' onClose={() => setOpen(false)} open={open}>
+        <div ref={pieRef} style={{
+          width: '100%',
+          height: '400px',
+          marginTop: '30px'
+        }} />
+      </Drawer>
     </div>
   )
 }
