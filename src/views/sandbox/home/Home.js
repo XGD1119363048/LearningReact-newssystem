@@ -23,10 +23,12 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-
     axios.get('/news?publishState=2&_expand=category').then(res => {
       renderBarView(_.groupBy(res.data, item => item.category.title))
     })
+    return () => {
+      window.onresize = null
+    }
   }, [])
 
   const barRef = useRef()
@@ -45,9 +47,15 @@ export default function Home() {
         data: ['数量']
       },
       xAxis: {
-        data: Object.keys(obj)
+        data: Object.keys(obj),
+        axisLabel: {
+          rotate: '45',
+          interval: 0
+        }
       },
-      yAxis: {},
+      yAxis: {
+        minInterval: 1
+      },
       series: [
         {
           name: '数量',
@@ -59,6 +67,11 @@ export default function Home() {
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
+
+    window.onresize = () => {
+      // console.log('resize')
+      myChart.resize()
+    }
   }
 
 

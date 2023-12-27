@@ -570,12 +570,12 @@
       "author": "admin",
       "roleId": 1,
       "auditState": 2,
-      "publishState": 0,
+      "publishState": 2,
       "createTime": 1703126082185,
       "star": 0,
       "view": 0,
       "id": 9,
-      "publishTime": 1703238019321
+      "publishTime": 1703661000784
     },
     {
       "title": "ccc",
@@ -585,11 +585,12 @@
       "author": "admin",
       "roleId": 1,
       "auditState": 2,
-      "publishState": 1,
+      "publishState": 2,
       "createTime": 1703145457660,
       "star": 0,
       "view": 0,
-      "id": 11
+      "id": 11,
+      "publishTime": 1703660989537
     },
     {
       "title": "tiechui111",
