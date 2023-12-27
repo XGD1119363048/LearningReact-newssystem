@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
 import axios from 'axios'
 import { NavLink } from 'react-router-dom'
+import * as echarts from 'echarts'
+import _ from 'lodash'
 import { Avatar, Card, Col, List, Row } from 'antd'
 const { Meta } = Card;
 
@@ -20,8 +22,48 @@ export default function Home() {
     })
   }, [])
 
-  const {username, region, role: {roleName}} = JSON.parse(localStorage.getItem('token'))
-  
+  useEffect(() => {
+
+    axios.get('/news?publishState=2&_expand=category').then(res => {
+      renderBarView(_.groupBy(res.data, item => item.category.title))
+    })
+  }, [])
+
+  const barRef = useRef()
+
+  const renderBarView = (obj) => {
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(barRef.current);
+
+    // 指定图表的配置项和数据
+    var option = {
+      title: {
+        text: '新闻分类图示'
+      },
+      tooltip: {},
+      legend: {
+        data: ['数量']
+      },
+      xAxis: {
+        data: Object.keys(obj)
+      },
+      yAxis: {},
+      series: [
+        {
+          name: '数量',
+          type: 'bar',
+          data: Object.values(obj).map(item => item.length)
+        }
+      ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+  }
+
+
+  const { username, region, role: { roleName } } = JSON.parse(localStorage.getItem('token'))
+
   return (
     <div>
       <Row gutter={16}>
@@ -66,12 +108,18 @@ export default function Home() {
               title={username}
               description={<div>
                 <b>{region || '全球'}</b>
-                <span style={{paddingLeft: '30px'}}>{roleName}</span>
+                <span style={{ paddingLeft: '30px' }}>{roleName}</span>
               </div>}
             />
           </Card>
         </Col>
       </Row>
+
+      <div ref={barRef} style={{
+        width: '100%',
+        height: '400px',
+        marginTop: '30px'
+      }}></div>
     </div>
   )
 }
